@@ -1,0 +1,8 @@
+# folders
+.vscode
+__pycache__/
+template
+venv
+
+# files
+.DS_Store
