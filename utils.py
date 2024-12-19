@@ -1,9 +1,9 @@
+from functools import reduce
 from typing import List
-import functools
 
 
 def compose(*funcs):
-    return lambda x: functools.reduce(lambda acc, f: f(acc), funcs, x)
+    return lambda x: reduce(lambda acc, f: f(acc), funcs, x)
 
 
 def load_data(filepath: str, split_delimiter: str) -> list:
