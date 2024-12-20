@@ -1,13 +1,7 @@
-from typing import List, Tuple
 from utils import *
 
 # Filepath
 filepath = "./data/12-01.txt"
-
-
-# Problem-specific functions
-def get_differences(data: List[Tuple[int, int]]) -> List[int]:
-    return [abs(a - b) for a, b in data]
 
 
 # Load data
@@ -20,7 +14,7 @@ solve = compose(
     sort_sublists,
     parse_to_int,
     zip_sublists,
-    get_differences,
+    get_abs_differences,
     sum,
 )
 
