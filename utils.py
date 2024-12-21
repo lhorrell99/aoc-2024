@@ -10,6 +10,10 @@ def duplicate_elements(data: list) -> List[list]:
     return [[i, i] for i in data]
 
 
+def filter_falsy(data: list) -> list:
+    return [i for i in data if i]
+
+
 def get_abs_differences(data: List[Tuple[int, int]]) -> List[int]:
     return [abs(b - a) for a, b in data]
 
