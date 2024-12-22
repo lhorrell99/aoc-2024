@@ -41,6 +41,17 @@ def load_data(filepath: str, split_delimiter: str) -> list:
     return data.split(split_delimiter)
 
 
+def load_str(filepath: str) -> str:
+    with open(filepath) as file:
+        data = file.read()
+
+    return data
+
+
+def multiply_elements(data: List[int]) -> int:
+    return reduce(lambda acc, i: acc * i, data, 1)
+
+
 def partition(p_func: Callable, l: list) -> Tuple[list, list]:
     return reduce(lambda x, y: x[not p_func(y)].append(y) or x, l, ([], []))
 
