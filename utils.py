@@ -2,6 +2,14 @@ from functools import reduce
 from typing import List, Tuple, Callable
 
 
+def array_apply(*funcs: Callable) -> Callable:
+    return lambda x: [f(x) for f in funcs]
+
+
+def build_boolean_intersection(*funcs: Callable) -> Callable:
+    return lambda x: all([f(x) for f in funcs])
+
+
 def compose(*funcs: Callable) -> Callable:
     return lambda x: reduce(lambda acc, f: f(acc), funcs, x)
 
@@ -22,6 +30,10 @@ def get_differences(data: List[Tuple[int, int]]) -> List[int]:
     return [b - a for a, b in data]
 
 
+def invert(data: List[bool]) -> List[bool]:
+    return [not i for i in data]
+
+
 def load_data(filepath: str, split_delimiter: str) -> list:
     with open(filepath) as file:
         data = file.read()
@@ -37,8 +49,8 @@ def parse_to_int(data: List[List[str]]) -> List[List[int]]:
     return [[int(j) for j in i] for i in data]
 
 
-def transpose(data: List[list]) -> List[list]:
-    return [list(i) for i in zip(*data)]
+def row_all(data: List[List[bool]]) -> List[bool]:
+    return [all(i) for i in data]
 
 
 def split_strings(data: List[str], split_delimiter: str | None = None) -> list:
@@ -47,6 +59,10 @@ def split_strings(data: List[str], split_delimiter: str | None = None) -> list:
 
 def sort_sublists(data: List[list]) -> List[list]:
     return [sorted(i) for i in data]
+
+
+def transpose(data: List[list]) -> List[list]:
+    return [list(i) for i in zip(*data)]
 
 
 def zip_sublists(data: List[list]) -> List[list]:
