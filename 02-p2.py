@@ -38,7 +38,7 @@ def is_valid(data: List[int]) -> bool:
         return True
 
     # Brute force removing elements
-    for i, val in enumerate(data):
+    for i, _ in enumerate(data):
         test = data[0:i] + data[i + 1 :]
         if test_all_conditions(test):
             return True
