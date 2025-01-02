@@ -1,47 +1,45 @@
 from utils import *
-import re
+from itertools import islice
 
 # Filepath
-filepath = "./data/12-04-test.txt"
+filepath = "./data/12-04.txt"
 
 
 # Problem-specific functions
 get_row_len = compose(transpose, len)
 
 
+def get_row_slice(matrix: List[str], start: int, r_splice: int) -> List[str]:
+    return list(islice(matrix, start, start + r_splice))
+
+
+def get_all_submatrices(
+    matrix: List[str], r_splice: int, c_splice: int
+) -> List[List[str]]:
+    process = compose(
+        lambda x: [get_row_slice(x, i, r_splice) for i, _ in enumerate(x)],
+        lambda x: [transpose(i) for i in x],
+        lambda x: [get_row_slice(y, i, c_splice) for y in x for i, _ in enumerate(y)],
+        lambda x: [transpose(i) for i in x],
+        lambda x: list(filter(lambda y: len(flatten(y)) == r_splice * c_splice, x)),
+    )
+
+    return process(matrix)
+
+
 def test_pair(str_char: str, search_char: str, skip_char: str = ".") -> bool:
     return True if str_char == search_char or search_char == skip_char else False
 
 
-def find_all_in_string(string: str, s_pattern: str, skip_char: str = ".") -> int:
-    pairwise = [
-        list(zip(string[i:], s_pattern))
-        for i in range(len(string) - (len(s_pattern) - 1))
-    ]
-    matches = [all(test_pair(*i) for i in j) for j in pairwise]
-    return sum(matches)
-
-
-def count_in_matrix(data: List[str], s_pattern: List[str], skip_char: str = ".") -> int:
-    # Pad input
-    padded_data = pad_rows(data)
-
-    # Get row lengths
-    row_len = get_row_len(padded_data)
-    search_row_len = get_row_len(s_pattern)
-
-    # Flatten
-    flattened_data = flatten(padded_data)
-
-    # Build flattened search pattern
-    s_pattern = f"{skip_char * (row_len - search_row_len)}".join(s_pattern)
-
-    return find_all_in_string(flattened_data, s_pattern, ".")
+def test_match(search: List[str], match: List[str], skip_char: str = ".") -> bool:
+    return all(test_pair(*i, skip_char) for i in zip(flatten(search), flatten(match)))
 
 
 # Load data
 data = load_data(filepath, "\n")
 
+# Define search matrix
+s_matrix = ["M.S", ".A.", "M.S"]
 
 # Compose a solver
 solve = compose(
@@ -51,7 +49,9 @@ solve = compose(
         flip_cols,
         compose(transpose, flip_cols),
     ),
-    lambda x: [count_in_matrix(i, ["M.S", ".A.", "M.S"]) for i in x],
+    lambda x: [get_all_submatrices(i, len(s_matrix), get_row_len(s_matrix)) for i in x],
+    lambda x: [i for j in x for i in j],
+    lambda x: [test_match(i, s_matrix) for i in x],
     sum,
 )
 
